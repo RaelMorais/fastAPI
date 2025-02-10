@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Query
 import requests
-import json
+from typing import Optional
+
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
@@ -46,8 +48,34 @@ def dolar():
                   'low':data['USDBRL']['low'],
             }
     return lista
+@app.get('/api/cars')
+def all_cars():
+    url = "https://raelmorais.github.io/api/api_car.json"
+    response = requests.get(url)
+    print(response)
+    data = response.json()
+    print(data)
+    return data 
 
+def fetch_filtered_cars(model: str = None, brand: str = None, year: str = None):
+    url = "https://raelmorais.github.io/api/api_car.json"
+    response = requests.get(url)
+    return response
+
+@app.get('/api/cars/filtered')
+def get_filtered_cars(model: str = Query(None), brand: str = Query(None), year: str = Query(None)):
+    response = fetch_filtered_cars(model, brand, year)
+
+    if response.status_code == 200:
+        data = response.json()
+        filtered_cars = [car for car in data if
+                         (model is None or car['model'].lower() == model.lower()) and
+                         (brand is None or car['brand'].lower() == brand.lower()) and
+                         (year is None or car['year'] == year)]
+        if not filtered_cars:
+            return {'message': 'Nenhum carro encontrado com os parâmetros fornecidos.'}
         
-    
+        return {'Carro Filtrado': filtered_cars[0]}  
 
-
+    else:
+        return {'error': f'Ocorreu um erro ao acessar a API externa. Código: {response.status_code}'}
