@@ -46,7 +46,7 @@ Filter cars by model, brand, and/or year. This endpoint accepts query parameters
 - ***brand***: The brand of the car to filter by.
 - ***year***: The manufacturing year of the car to filter by.
 
-### :warning: Request example:
+### Request example:
 
 ```bash
 http://127.0.0.1:8000/api/cars/filtered?model=Onix&brand=Chevrolet&year=2012
@@ -54,7 +54,8 @@ http://127.0.0.1:8000/api/cars/filtered?model=Onix&brand=Chevrolet&year=2012
 #### Response
 - **Status Code**: `200 OK (If cars are found)`  	:heavy_check_mark:
 - **Body**: A JSON object containing the first filtered car.
-     
+- 
+#### :warning: Example Response
 ```json
 {
   "Cars filtered": {
